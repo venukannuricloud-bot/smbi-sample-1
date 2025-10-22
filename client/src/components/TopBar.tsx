@@ -1,4 +1,5 @@
-import { Bell, User } from 'lucide-react';
+import { Bell, User, LogOut } from 'lucide-react';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import Logo from './Logo';
 import ThemeToggle from './ThemeToggle';
+import { useToast } from '@/hooks/use-toast';
 
 interface TopBarProps {
   userName?: string;
@@ -21,6 +23,17 @@ interface TopBarProps {
 }
 
 export default function TopBar({ userName = 'John Doe', userRole = 'member', notificationCount = 3 }: TopBarProps) {
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    console.log('Logout clicked');
+    toast({
+      title: 'Logged Out',
+      description: 'You have been successfully logged out.',
+    });
+    setLocation('/login');
+  };
   return (
     <header className="h-16 bg-background border-b border-border flex items-center justify-between px-4 sticky top-0 z-50">
       <div className="flex items-center gap-4">
@@ -67,7 +80,8 @@ export default function TopBar({ userName = 'John Doe', userRole = 'member', not
               Profile
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem data-testid="button-logout" onClick={() => console.log('Logout clicked')}>
+            <DropdownMenuItem data-testid="button-logout" onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
               Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
